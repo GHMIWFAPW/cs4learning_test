@@ -189,10 +189,213 @@ class LinkedList(object):
 
 
 """
-2. 从链表中移除重复元素
-(1) 
+<<<<<<< Updated upstream
+2. 从链表中删除重复值
+(1) 单链表、无循环
+(2) 不能插入空值
+(3) 已有实现的链表 
+(4) 可以使用额外的数据结构
+(5) 内存够
+
+实现（1）： 哈希表循环
+1. 对于每个节点，如果节点值再哈希表内，则删除这个节点；否则将此节点的值添加汝哈希表
+
+时间复杂度：O(n)
+空间复杂度：O(n)
+
+实现（2）： In-Place
+1. 对于每个节点，其于其他每个节点相比较，删除哪些于当前节点相同值的节点
+
+时间复杂度：O(n^2)
+空间复杂度：O(1)
 """
 
+class MoveRed4LinkedList(LinkedList):
+    def remove_dupes(self):
+        """
+        删除重复值函数
+        :return:
+        """
+        if self.head is None:
+            return
+        node = self.head
+        seen_data = set()
+        # 开始遍历
+        while node is not None:
+            # 判断值是否再其中
+            if node.data not in seen_data:
+                seen_data.add(node.data)
+                prev = node
+                node = node.next
+            else:
+                prev.next = node.next
+                node = node.next
+
+    def remove_dupes_single_pointer(self):
+        if self.head is None:
+            return
+        node = self.head
+        seen_data = set(node.data)
+        while node.next is not None:
+            if node.next.data in seen_data:
+                node.next = node.next.next
+            else:
+                seen_data.add(node.next.data)
+                node = node.next
+
+    def remove_dupes_in_place(self):
+        curr = self.head
+        while curr is not None:
+            runner = curr
+            while runner.next is not None:
+                if runner.next.data == curr.data:
+                    runner.next = runner.next.next
+                else:
+                    runner = runner.next
+            curr = curr.next
+
+# TODO:单元测试
 
 
+"""
+3. 找到第K个到最后一个的数据 【即：先给出K个位置，而后一起遍历，剩下的，则就是第k个到最后一个】
+（1）单链表、无环
+（2）K为有效整数
+（3）K为0时，返回最后以给元素
+（4）若比链表大，则返回NONE
+（5）不能使用其他的数据结构
+（6）已有基本节点结构和链表结构
 
+实现方案：
+设置两个指针，快和慢
+对快指针开始，按照其值增加
+同时增加两个指针直到快指针到最后
+返回慢指针的值
+
+时间复杂度：O(n)
+空间复杂度：O(1)
+"""
+
+class Kth2Last(LinkedList):
+    """
+    设置两个链表，(1) 先将指针指完前K个点；(2)
+    """
+    def kth_to_last_elem(self, k):
+        if self.head is None:
+            return None
+        fast = self.head
+        slow = self.head
+        # 对快指针一个开始头，增加之
+        for _ in range(k):
+            fast = fast.next
+            # 如果k>= 链表尺寸，则返回none
+            if fast is None:
+                return None
+
+        # 同时增加两个指针的值，直到快指针到达最终.则快的遍历完的次数，即为 MAX- K，
+        while fast.next is not None:
+            fast = fast.next
+            slow = slow.next
+        return slow.data
+
+
+#TODO:测试代码
+
+
+"""
+4. 删除链表中的一个节点  [删除中一个节点，只给出这个节点]
+实现：需要两个指针，一个用于当前节点另一个用户下一个。复制下一个节点的data到当前节点的data并更新当前节点的next指针
+时间复杂度：O(1)
+空间复杂度：O(1)
+=======
+2. 从链表中移除重复元素
+(1) 
+>>>>>>> Stashed changes
+"""
+
+class DelNode(LinkedList):
+    def delete_node(self, node):
+        """
+        :param node: 要删除的节点
+        :return:
+        """
+        if node is None:
+            return
+        if node.next is None:
+            node.data = None
+        else:
+            node.data = node.next.data
+            node.next = node.next.next
+
+"""
+5. 基于一个给定值分区链表 【所有节点中比给定值小的先于等于或大于的】
+
+实现：创建左右链表。对于在列表中的每个元素，如果比给定值小，则加入左链表，否则加入右链表。最后左右链表合并
+"""
+
+class PartitionLinkedList(LinkedList):
+    def partition(self, data):
+        if self.head is None:
+            return
+        left = PartitionLinkedList(None)
+        right = PartitionLinkedList(None)
+        curr = self.head
+
+        # 创建左右列表
+        while curr is not None:
+            if curr.data < data:
+                left.append(curr.data)
+            elif curr.data == data:
+                right.insert(curr.data)
+            else:
+                right.append(curr.data)
+        curr_left = left.head
+        if curr_left is None:
+            return right
+        else:
+            while curr_left.next is not None:
+                curr_left = curr_left.next
+            curr_left.next = right.head
+            return left
+
+# TODO:测试代码
+
+
+"""
+6. 加和两个反序存在于链表中的值
+
+"""
+
+class AddReverse(LinkedList):
+    def _add_reverse(self, first_node, second_node, carry):
+        """
+        :param first_node: 第一个链表内的节点
+        :param second_node: 第二个链表内的节点
+        :param carry:  存储器，用于存储进位
+        :return: 每一个位置的节点
+        """
+        if first_node is None and second_node is None and not carry:
+            return None
+        value = carry
+        value += first_node.data if first_node is not None else 0
+        value += second_node.data if second_node is not None else 0
+        carry = 1 if value >=10 else 0
+        value %= 10
+        node = Node(value)
+        node.next = self._add_reverse(
+            first_node.next if first_node is not None else None,
+            second_node.next if second_node is not None else None,
+            carry
+        )
+        return node
+
+    def add_reverse(self, first_list, second_list):
+        """若传入的两个列表为有一个为空则无需计算，否则调用。最终返回一个链表，值为加和后的值
+        :param first_list:
+        :param second_list:
+        :return:
+        """
+        if first_list is None or second_list is None:
+            return None
+        head = self._add_reverse(first_list, second_list, 0)
+        return AddReverse(head)
