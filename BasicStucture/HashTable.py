@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('/Users/msb/Downloads/_work/JupyterScript_ipy/program_works/model_try/ds')
+# sys.path.append('C:\\Users\\\\Downloads\\coding\\ProjectAll\\test\\DataStructure')
+from BasicStucture.ArrayStrings import HashTable, Item
 
 """
 -------------------------------------------------
