@@ -43,7 +43,11 @@ class Node(object):
         self.next = next
 
     def __str__(self):
-        return self.data
+        """
+        输出时节点的情况
+        :return: 返回本地的值
+        """
+        return str(self.data)
 
 
 # 链表基本结构
@@ -137,7 +141,7 @@ class LinkedList(object):
         时间复杂度：O(n)
         空间复杂度：O(1)
         """
-        if data is None or self.head is None
+        if data is None or self.head is None:
             return
         if self.head.data == data:
             self.head = self.head.next
@@ -366,6 +370,7 @@ class PartitionLinkedList(LinkedList):
 
 """
 
+
 class AddReverse(LinkedList):
     def _add_reverse(self, first_node, second_node, carry):
         """
@@ -399,3 +404,165 @@ class AddReverse(LinkedList):
             return None
         head = self._add_reverse(first_list, second_list, 0)
         return AddReverse(head)
+
+
+"""
+7. 寻找链表循环的起始点 【即：判断是不是循环链表】
+方案：
+（1）使用两个相关链表：快 和 慢， 初始化头指针
+（2）增加快慢链表直到他们相遇：
+    快指正增速是满指针的两倍; 如果快链表的next指针为空，则没有循环链表circular list
+（3）当慢链表和快链表相遇，则移动慢链表到head
+（4）每次增加一个快慢链表的节点直到相遇
+（5）相遇点，就是循环开始点
+
+时间复杂度：O(n)
+空间复杂度：O(1)
+"""
+
+
+class CircularList(LinkedList):
+    # 重写str
+    def __str__(self):
+        return "data:{self.data}; head:{self.head}".format(self=self)
+
+    def find_start4loop(self):
+        if self.head is None or self.head.next is None:
+            return None
+        slow = self.head
+        fast = self.head
+        while fast.next is not None:
+            slow = slow.next
+            fast = fast.next.next
+            if fast is None:
+                return None
+            if slow == fast:
+                break
+        # 当跳出那个循环的时候【即：找到了相等的数据】
+        while slow != fast:
+            slow = slow.next
+            fast = fast.next
+            if fast is None:
+                return None
+        return slow
+
+
+# 检测真实性
+class api_FindLoopStart(object):
+    def test_find_loop_start(self):
+        print('Test: Empty list')
+        linked_list = CircularList()
+        print("find loop start 4 empty list is None ?:{}".format(linked_list.find_start4loop()))
+        print('Test: Not a circular linked list: One element')
+        head = Node(1)
+        linked_list = CircularList(head)
+        print("find loop start 4 One Element list is None ?:{}".format(linked_list.find_start4loop()))
+        print('Test: Not a circular linked list: Two elements')
+        linked_list.append(2)
+        print("find loop start 4 Two Element list is None ?:{}".format(linked_list.find_start4loop()))
+        print('Test: General case: Circular linked list')
+        node10 = Node(10)
+        node9 = Node(9, node10)
+        node8 = Node(8, node9)
+        node7 = Node(7, node8)
+        node6 = Node(6, node7)
+        node5 = Node(5, node6)
+        node4 = Node(4, node5)
+        node3 = Node(3, node4)
+        node2 = Node(2, node3)
+        node1 = Node(1, node2)
+        node0 = Node(0, node1)
+        node10.next = node3
+        linked_list = CircularList(node0)
+        print("find loop start 4 Circular list is what ?",linked_list.find_start4loop())
+        # str(linked_list.find_start4loop())
+        print('Success: test_find_loop_start')
+
+
+def main_circular():
+    test = api_FindLoopStart()
+    test.test_find_loop_start()
+
+
+"""
+8. 判断一个链表是否是回文[即：中心对称]
+
+方案：
+1. 反转链表
+   遍历当前链表
+       将当前节点插入到插入到新链表
+2. 对比这个反转的链表以及原始列表
+    只需要对比前半部分
+    
+时间复杂度：O(n)
+空间复杂度：O(n)
+"""
+
+
+class PalindromeLinkedList(LinkedList):
+    def is_palindrome(self):
+        if self.head is None or self.head.next is None:
+            return False
+        curr = self.head
+        reversed_list = PalindromeLinkedList()
+        length = 0
+
+        # 反转链表[因为insert是一直向着第一个位置插入, 故而得到的是反序的数据结构]
+        while curr is not None:
+            reversed_list.insert(curr.data)
+            length += 1
+            curr = curr.next
+
+        # 对比
+        iterations = int(length / 2)
+        curr = self.head
+        curr_reversed = reversed_list.head
+        for _ in range(iterations):
+            if curr.data != curr_reversed.data:
+                return False
+            curr = curr.next
+            curr_reversed = curr_reversed.next
+        return True
+
+
+# 检查测试数据是否正常
+class api_palindrome(object):
+    def test_palindrome(self):
+        print('Test: Empty list')
+        linked_list = PalindromeLinkedList()
+        print("Terminating 4 empty list is Palindrome ?:\t{}".format(linked_list.is_palindrome()))
+        print('Test: Single element list')
+        linked_list = PalindromeLinkedList(Node(1))
+        print("Terminating 4 One Element list is Palindrome ?:\t{}".format(linked_list.is_palindrome()))
+        print('Test: Two element list, not a palindrome')
+        linked_list.append(2)
+        print("Terminating 4 Two Element list is Palindrome ?:\t{}".format(linked_list.is_palindrome()))
+        print('Test: General case: Palindrome with even length')
+        head = Node("fk")
+        linked_list = PalindromeLinkedList(head)
+        linked_list.append("sk")
+        linked_list.append("sk")
+        linked_list.append("fk")
+        print("Terminating 4 even length Element list is Palindrome ?:\t{}".format(linked_list.is_palindrome()))
+        print('Test: General case: Palindrome with odd length')
+        head = Node(1)
+        linked_list = PalindromeLinkedList(head)
+        linked_list.append(2)
+        linked_list.append(3)
+        linked_list.append(2)
+        linked_list.append(1)
+        print("Terminating 4 even length Element list is Palindrome ?:\t{}".format(linked_list.is_palindrome()))
+        print('Success: test_palindrome')
+
+
+# 测试回文链表
+def main_palindrome():
+    test = api_palindrome()
+    test.test_palindrome()
+
+
+if __name__ == '__main__':
+    ## 判断训练链表的开始点
+    # main_circular()
+    ## 判断链表是否为回文链表
+    main_palindrome()
