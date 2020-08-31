@@ -11,7 +11,7 @@ from BasicStucture.StackAndQueue import StackLinkedList
    Description :  实现队列
    Author :       
    Date :         2020-08-19 21:13
-   Email:         @my.bristol.ac.uk
+   Email:         @my..ac.uk
    Mobile:         
 -------------------------------------------------
 

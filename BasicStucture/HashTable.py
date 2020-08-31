@@ -16,3 +16,15 @@ from BasicStucture.ArrayStrings import HashTable, Item
 
 """
 
+
+class HashTablev2(HashTable):
+    """
+    （1）其假设key必定为自然数，但是其实并不是如此. key可能为非自然数
+    （2）如果运气差，求膜全部到一个
+    """
+    # def trans_key(self, key):
+
+
+
+
+

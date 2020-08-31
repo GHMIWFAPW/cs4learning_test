@@ -6,7 +6,7 @@
    Description :  基础数据结构3.2： 数组与字符串
    Author :       
    Date :         2020-08-26 19:47
-   Email:         @my.bristol.ac.uk
+   Email:         @my..ac.uk
    Mobile:         
 -------------------------------------------------
 
